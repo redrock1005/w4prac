@@ -10,4 +10,4 @@ price_provider = soup.select('.provider-info')
 for item in price_provider:
     print(item)
 
-#dddddgit add .
+#dddddgit add .Wndtjrdh2@
