@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function save_url() {
+            let url_give = $('#url').val()
+
+            $.ajax({
+                type: "POST",
+                url: "/test",
+                data: {url_give: url_give},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            });
+        }
+
+    </script>
+
+</head>
+<body>
+  <h1>크롤링할 url입력하기</h1>
+  <input id="url" >
+  <button onclick="save_url()">저장</button>
+</body>
+</html>
