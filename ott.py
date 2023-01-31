@@ -17,7 +17,7 @@ for ott_name in otts_name:
     print(data_ott)
 
 
-#OTT이미지는 어떻게 가져올지.
+#OTT이미지는 어떻게 가져올지
 
 # data_ott_image = []
 # otts_image = soup.select("#streamingVodList > div > div.price-item-provider > div.provider-info")
