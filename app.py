@@ -24,7 +24,7 @@ def test_post():
     # 암묵적으로 웹 지원 로드를 위해 3초까지 기다려준다.
     driver.implicitly_wait(3)
     # url에 접근한다.
-    driver.get("https://m.kinolights.com/title/111951")
+    driver.get(url_give)
     html = driver.page_source  ##페이지의 element 모두 가져오기
     soup = BeautifulSoup(html, 'html.parser')
 
