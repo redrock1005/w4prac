@@ -15,7 +15,7 @@ for ott_name in otts_name:
     OTTs = ott_name.select_one('p').text
     data_ott.append({'ott':OTTs})
     print(data_ott)
-
+#커밋용
 
 #OTT이미지는 어떻게 가져올지
 
