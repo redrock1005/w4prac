@@ -12,10 +12,13 @@ ca = certifi.where()
 client = MongoClient('mongodb+srv://test:sparta@cluster0.jl043qw.mongodb.net/?retryWrites=true&w=majority', tlsCAFile = ca)
 db = client.dbsparta
 
+
+#크롤링할 페이지, indext.html
 @app.route('/')
 def home():
     return render_template('index.html')
 
+#크롤링api
 @app.route('/test', methods=['POST'])
 def test_post():
     url_give = request.form['url_give']
@@ -36,14 +39,22 @@ def test_post():
     contents = soup.select('#contents > div.movie-info-container > div.movie-header-area')
     for content in contents:
         content_title = content.select_one('div > h3').text
-        image_url = content.select_one('div > img')['src']
+
+    imgs = soup.select('#contents > div.movie-info-container > div')
+    for img in imgs:
+        bg_image = img.select_one('div.backdrop > img')
+        if bg_image is not None:
+            bg_url = bg_image['src']
+        poster_image = img.select_one('div.poster > img')
+        if poster_image is not None:
+            poster_url = poster_image['src']
 
     data_actor = []
-    actors_name = soup.select('#synopsis > article:nth-child(7) > div > div')
+    actors_name = soup.select('#synopsis > article > div > div')
     for actor_name in actors_name:
-        actors = actor_name.select_one('div.name').text
+        actors = actor_name.select_one('div.name')
         if actors is not None:
-            actor = actors
+            actor = actors.text
             data_actor.append({'actor':actor})
 
     Synops = soup.select('#synopsis > article:nth-child(1)')
@@ -56,22 +67,41 @@ def test_post():
         OTTs = ott_name.select_one('p').text
         data_ott.append({'ott': OTTs})
 
+    years = soup.select('#contents > div> div > div > p')
+    for year in years:
+        detail = year.select('span')
+        year_content = detail[1].text
 
     doc={
         'title':content_title,
-        'image':image_url,
+        'bg_image':bg_url,
+        'poster_image':poster_url,
          'actor':data_actor,
         'synop':synop,
-        'ott':data_ott
+        'ott':data_ott,
+        'year':year_content
     }
-    db.w4prac.insert_one(doc)
+    db.w4prac_crwaler.insert_one(doc)
     return jsonify({'msg': '저장 완료'})
+
+#상세페이지, 한줄평저장api
+@app.route('/detail/comments', methods=['POST'])
+def detail_comment_post():
+    comment_give = request.form['comment_give']
+    star_give = request.form['comment_give']
+    time_give = request.form['comment_give']
+
+    comment_ott = {
+        'comment': comment_give,
+        'star': star_give,
+        'data': time_give
+    }
+    db.w4prac_comments.insert_one(comment_ott)
+    return jsonify({'msg': '한줄평 등록 완료'})
 
 
 
 if __name__ == '__main__':
    app.run('0.0.0.0',port=4000,debug=True)
 
-
-#ㅋㅓ밋좀111gitdddd111
 

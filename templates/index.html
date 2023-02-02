@@ -5,6 +5,22 @@
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+        document.getElementById("myButton").addEventListener("click", function clock() {
+            var today = new Date();
+
+            var year = today.getFullYear();
+            var month = ('0' + (today.getMonth() + 1)).slice(-2);
+            var day = ('0' + today.getDate()).slice(-2);
+            var hours = ('0' + today.getHours()).slice(-2);
+            var minutes = ('0' + today.getMinutes()).slice(-2);
+            var seconds = ('0' + today.getSeconds()).slice(-2);
+
+            var dateString = year + '-' + month + '-' + day + hours + ':' + minutes  + ':' + seconds;
+            save_comment(dateString);
+        });
+    </script>
+
+    <script>
         function save_url() {
             let url_give = $('#url').val()
 
@@ -19,12 +35,42 @@
             });
         }
 
+        function save_comment(dateString) {
+            let comment_give = $('#comment').val()
+            let star_give = $('#star').val()
+            let time_give = dateString
+
+                $.ajax({
+                    type: "POST",
+                    url: "/detail/comments",
+                    data: {comment_give: comment_give, star_give: star_give, time_give: time_give},
+                    success: function (response) {
+                        alert(response['msg'])
+                        window.location.reload()
+                    }
+                });
+        }
     </script>
 
 </head>
 <body>
-  <h1>크롤링할 url입력하기</h1>
-  <input id="url" >
-  <button onclick="save_url()">저장</button>
+<h1>크롤링할 url입력하기</h1>
+<input id="url">
+<button onclick="save_url()">저장</button>
+<!--  코멘트받기-->
+<div>
+    <input id="comment">
+    <select id="star">
+        <option value="1">1점</option>
+        <option value="2">2점</option>
+        <option value="3">3점</option>
+        <option value="4">4점</option>
+        <option value="5">5점</option>
+    </select>
+    <button onclick="save_comment()" id="myButton">한줄평 등록</button>
+
+
+</div>
+
 </body>
 </html>
