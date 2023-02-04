@@ -5,9 +5,19 @@ driver = webdriver.Chrome('/Users/jungseokoh/Downloads/chromedriver_mac64/chrome
 #암묵적으로 웹 지원 로드를 위해 3초까지 기다려준다.
 driver.implicitly_wait(3)
 #url에 접근한다.
-driver.get("https://m.kinolights.com/title/3709")
+# driver.get("https://m.kinolights.com/title/3709")
+driver.get("https://m.kinolights.com/ranking/netflix")
 html = driver.page_source ##페이지의 element 모두 가져오기
 soup = BeautifulSoup(html, 'html.parser')
+
+#contents > div.contents-area > div:nth-child(1) > div > div > ul.chart-list-container.active > li:nth-child(1) > a > span.left-content-wrap
+#contents > div.contents-area > div:nth-child(1) > div > div > ul.chart-list-container.active > li > a > span
+content_names = soup.select("#contents > div.contents-area > div:nth-child(1) > div > div > ul.chart-list-container.active > li > a > span")
+for content_name in content_names:
+    Name = content_name.select_one('span.title-text')
+    if Name is not None:
+        print(Name.text)
+
 
 # data_ott = []
 # otts_name = soup.select("#streamingVodList > div > div.price-item-provider > div.provider-info")
